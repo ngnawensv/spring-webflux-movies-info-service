@@ -34,6 +34,10 @@ spring:
       host: localhost
       port: 27017
       database: local
-
+---
 server:
   port: 8081
+---
+logging:
+  level:
+    root: debug
