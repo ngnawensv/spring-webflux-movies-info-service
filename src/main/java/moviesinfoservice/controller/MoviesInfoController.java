@@ -4,6 +4,7 @@ import jakarta.validation.Valid;
 import moviesinfoservice.domain.MovieInfo;
 import moviesinfoservice.service.MoviesInfoService;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -38,13 +39,19 @@ public class MoviesInfoController {
   }
 
   @GetMapping("/movieinfos/{id}")
-  public Mono<MovieInfo> getMovieInfosById(@PathVariable String id){
-    return moviesInfoService.getMovieInfosById(id);
+  public Mono<ResponseEntity<MovieInfo>> getMovieInfosById(@PathVariable String id){
+    return moviesInfoService.getMovieInfosById(id)
+        .map(ResponseEntity.ok()::body)
+        .switchIfEmpty(Mono.just(ResponseEntity.notFound().build()))
+        .log();
   }
 
   @PutMapping("/movieinfos/{id}")
-  public Mono<MovieInfo> updateMovieInfo(@RequestBody MovieInfo updateMovieInfo,@PathVariable String id){
-    return moviesInfoService.updateMovieInfo(updateMovieInfo,id).log();
+  public Mono<ResponseEntity<MovieInfo>> updateMovieInfo(@RequestBody MovieInfo updateMovieInfo,@PathVariable String id){
+    return moviesInfoService.updateMovieInfo(updateMovieInfo,id)
+        .map(ResponseEntity.ok()::body)// this operation transform Mono<MovieInfo> to Mono<ResponseEntity<MovieInfo>>
+        .switchIfEmpty(Mono.just(ResponseEntity.notFound().build()))
+        .log();
   }
 
   @DeleteMapping("/movieinfos/{id}")

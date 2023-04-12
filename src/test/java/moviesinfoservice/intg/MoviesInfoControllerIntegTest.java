@@ -151,5 +151,33 @@ public class MoviesInfoControllerIntegTest {
         .expectBody(Void.class);
   }
 
+  @Test
+  void updateMovieInfo_notfound() {
+    //given
+    var movieInfoId ="def";
+    var movieInfo = new MovieInfo(null, "Batman updated", 2005, List.of("Chist", "Michael"),
+        LocalDate.parse("2005-06-15"));
+
+    //when
+    webTestClient
+        .put()
+        .uri(URL_MOVIE_INFOS+"/{id}",movieInfoId)
+        .bodyValue(movieInfo)
+        .exchange()
+        .expectStatus()
+        .isNotFound();
+  }
+
+  @Test
+  void getMovieInfosById_notfound(){
+    var movieInfoId ="def";
+    webTestClient
+        .get()
+        .uri(URL_MOVIE_INFOS+"/{id}",movieInfoId)// best practice
+        .exchange()
+        .expectStatus()
+        .isNotFound();
+  }
+
 
 }
