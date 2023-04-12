@@ -1,5 +1,6 @@
 package moviesinfoservice.controller;
 
+import jakarta.validation.Valid;
 import moviesinfoservice.domain.MovieInfo;
 import moviesinfoservice.service.MoviesInfoService;
 import org.springframework.http.HttpStatus;
@@ -27,7 +28,7 @@ public class MoviesInfoController {
 
   @PostMapping("/movieinfos")
   @ResponseStatus(HttpStatus.CREATED)
-  public Mono<MovieInfo> addMovieInfo(@RequestBody MovieInfo movieInfo){
+  public Mono<MovieInfo> addMovieInfo(@RequestBody @Valid MovieInfo movieInfo){
     return moviesInfoService.addMovieInfo(movieInfo).log();
   }
 

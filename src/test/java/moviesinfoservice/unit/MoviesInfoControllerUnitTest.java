@@ -147,4 +147,59 @@ public class MoviesInfoControllerUnitTest {
         .expectBody(Void.class);
   }
 
+  @Test
+  void addMovieInfo_validation() {
+
+    //given
+    var movieInfo = new MovieInfo(null, "", -2005, List.of("Chist", "Michael"),
+        LocalDate.parse("2005-06-15"));
+
+    when(moviesInfoService.addMovieInfo(movieInfo))
+        .thenReturn(Mono.just(new MovieInfo("mockId" ,"Batman", 2005, List.of("Chist", "Michael"),
+            LocalDate.parse("2005-06-15"))));
+
+    //when
+    webTestClient
+        .post()
+        .uri(URL_MOVIE_INFOS)
+        .bodyValue(movieInfo)
+        .exchange()
+        .expectStatus()
+        .isBadRequest()
+        /*.expectBody(MovieInfo.class)
+        .consumeWith(movieInfoEntityExchangeResult -> {
+          var saveMovieinfo = movieInfoEntityExchangeResult.getResponseBody();
+          assert saveMovieinfo != null;
+          assert saveMovieinfo.getMovieInfoId() != null;
+          assertEquals("mockId",saveMovieinfo.getMovieInfoId());
+        })*/;
+  }
+
+  @Test
+  void addMovieInfo_validation2() {
+
+    //given
+    var movieInfo = new MovieInfo(null, "", -2005, List.of("Chist", "Michael"),
+        LocalDate.parse("2005-06-15"));
+
+    when(moviesInfoService.addMovieInfo(movieInfo))
+        .thenReturn(Mono.just(new MovieInfo("mockId" ,"Batman", 2005, List.of("Chist", "Michael"),
+            LocalDate.parse("2005-06-15"))));
+
+    //when
+    webTestClient
+        .post()
+        .uri(URL_MOVIE_INFOS)
+        .bodyValue(movieInfo)
+        .exchange()
+        .expectStatus()
+        .isBadRequest()
+        .expectBody(String.class)
+        .consumeWith(movieInfoEntityExchangeResult -> {
+          var responseBody = movieInfoEntityExchangeResult.getResponseBody();
+          System.out.println("responseBody : "+ responseBody);
+          assert responseBody!=null;
+        });
+  }
+
 }
