@@ -165,14 +165,7 @@ public class MoviesInfoControllerUnitTest {
         .bodyValue(movieInfo)
         .exchange()
         .expectStatus()
-        .isBadRequest()
-        /*.expectBody(MovieInfo.class)
-        .consumeWith(movieInfoEntityExchangeResult -> {
-          var saveMovieinfo = movieInfoEntityExchangeResult.getResponseBody();
-          assert saveMovieinfo != null;
-          assert saveMovieinfo.getMovieInfoId() != null;
-          assertEquals("mockId",saveMovieinfo.getMovieInfoId());
-        })*/;
+        .isBadRequest();
   }
 
   @Test
@@ -199,6 +192,30 @@ public class MoviesInfoControllerUnitTest {
           var responseBody = movieInfoEntityExchangeResult.getResponseBody();
           System.out.println("responseBody : "+ responseBody);
           assert responseBody!=null;
+        });
+  }
+
+  @Test
+  void addMovieInfo_validation_with_error_message() {
+
+    //given
+    var movieInfo = new MovieInfo(null, "", -2005, List.of("Chist", "Michael"),
+        LocalDate.parse("2005-06-15"));
+
+    //when
+    webTestClient
+        .post()
+        .uri(URL_MOVIE_INFOS)
+        .bodyValue(movieInfo)
+        .exchange()
+        .expectStatus()
+        .isBadRequest()
+        .expectBody(String.class)
+        .consumeWith(movieInfoEntityExchangeResult -> {
+          var responseBody = movieInfoEntityExchangeResult.getResponseBody();
+          System.out.println("responseBody : "+ responseBody);
+          var errorMessageExpected = "movieInfo.name must be present,movieInfo.year must be a positive value";
+          assertEquals( errorMessageExpected,responseBody);
         });
   }
 
