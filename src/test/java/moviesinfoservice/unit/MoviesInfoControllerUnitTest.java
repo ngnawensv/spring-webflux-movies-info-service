@@ -219,4 +219,28 @@ public class MoviesInfoControllerUnitTest {
         });
   }
 
+  @Test
+  void addMovieInfo_validation_with_error_message_on_the_list() {
+
+    //given
+    var movieInfo = new MovieInfo(null, "", -2005, List.of(""),
+        LocalDate.parse("2005-06-15"));
+
+    //when
+    webTestClient
+        .post()
+        .uri(URL_MOVIE_INFOS)
+        .bodyValue(movieInfo)
+        .exchange()
+        .expectStatus()
+        .isBadRequest()
+        .expectBody(String.class)
+        .consumeWith(movieInfoEntityExchangeResult -> {
+          var responseBody = movieInfoEntityExchangeResult.getResponseBody();
+          System.out.println("responseBody : "+ responseBody);
+          var errorMessageExpected = "movieInfo.cast must be present,movieInfo.name must be present,movieInfo.year must be a positive value";
+          assertEquals( errorMessageExpected,responseBody);
+        });
+  }
+
 }
