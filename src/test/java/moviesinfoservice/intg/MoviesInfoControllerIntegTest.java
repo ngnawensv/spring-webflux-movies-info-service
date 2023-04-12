@@ -15,6 +15,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.reactive.server.WebTestClient;
+import org.springframework.web.util.UriComponentsBuilder;
 
 
 @SpringBootTest(classes = MoviesInfoServiceApplication.class,webEnvironment = WebEnvironment.RANDOM_PORT)
@@ -79,6 +80,21 @@ public class MoviesInfoControllerIntegTest {
         .is2xxSuccessful()
         .expectBodyList(MovieInfo.class)
         .hasSize(3);
+  }
+
+  @Test
+  void getAllMovieInfoByYear(){
+    var uri =UriComponentsBuilder.fromUriString(URL_MOVIE_INFOS)
+            .queryParam("year",2005)
+                .buildAndExpand().toUri();
+    webTestClient
+        .get()
+        .uri(uri)
+        .exchange()
+        .expectStatus()
+        .is2xxSuccessful()
+        .expectBodyList(MovieInfo.class)
+        .hasSize(1);
   }
 
   @Test
@@ -178,6 +194,4 @@ public class MoviesInfoControllerIntegTest {
         .expectStatus()
         .isNotFound();
   }
-
-
 }
