@@ -22,7 +22,7 @@ import reactor.core.publisher.Mono;
 //@WebFluxTest(controllers = MoviesInfoController.class)
 @SpringBootTest(classes = MoviesInfoServiceApplication.class,webEnvironment = WebEnvironment.RANDOM_PORT)
 @AutoConfigureWebTestClient
-public class MoviesInfoControllerUnitTest {
+class MoviesInfoControllerUnitTest {
 
   @Autowired
   WebTestClient webTestClient;

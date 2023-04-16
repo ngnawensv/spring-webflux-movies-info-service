@@ -20,7 +20,7 @@ import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 @RestController
-@RequestMapping("/v1")
+@RequestMapping("/v1/moviesinfo")
 @Slf4j
 public class MoviesInfoController {
 
@@ -30,13 +30,13 @@ public class MoviesInfoController {
     this.moviesInfoService = moviesInfoService;
   }
 
-  @PostMapping("/movieinfos")
+  @PostMapping
   @ResponseStatus(HttpStatus.CREATED)
   public Mono<MovieInfo> addMovieInfo(@RequestBody @Valid MovieInfo movieInfo){
     return moviesInfoService.addMovieInfo(movieInfo).log();
   }
 
-  @GetMapping("/movieinfos")
+  @GetMapping
   public Flux<MovieInfo> getAllMovieInfos(@RequestParam(value="year",required = false) Integer year){
     log.info("Year is : {}",year);
     if(year!=null){
@@ -45,7 +45,7 @@ public class MoviesInfoController {
     return moviesInfoService.getAllMovieInfos().log();
   }
 
-  @GetMapping("/movieinfos/{id}")
+  @GetMapping("/{id}")
   public Mono<ResponseEntity<MovieInfo>> getMovieInfosById(@PathVariable String id){
     return moviesInfoService.getMovieInfosById(id)
         .map(ResponseEntity.ok()::body)
@@ -53,7 +53,7 @@ public class MoviesInfoController {
         .log();
   }
 
-  @PutMapping("/movieinfos/{id}")
+  @PutMapping("/{id}")
   public Mono<ResponseEntity<MovieInfo>> updateMovieInfo(@RequestBody MovieInfo updateMovieInfo,@PathVariable String id){
     return moviesInfoService.updateMovieInfo(updateMovieInfo,id)
         .map(ResponseEntity.ok()::body)// this operation transform Mono<MovieInfo> to Mono<ResponseEntity<MovieInfo>>
@@ -61,7 +61,7 @@ public class MoviesInfoController {
         .log();
   }
 
-  @DeleteMapping("/movieinfos/{id}")
+  @DeleteMapping("/{id}")
   @ResponseStatus(HttpStatus.NO_CONTENT)
   public Mono<Void> deleteMovieInfo(@PathVariable String id){
     return moviesInfoService.deleteMovieInfo(id).log();
